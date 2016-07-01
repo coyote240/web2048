@@ -1,0 +1,5 @@
+honcho==0.7.1
+tornado==4.3
+-e git+git@github.com:coyote240/tornadobase.git@adaf13219919b71db3b0d1eaa0fd6cb5a4d1e203#egg=tornadobase
+-e git://github.com/coyote240/2048Solver.git@master#egg=py2048
+-e git+git@github.com:coyote240/web2048.git@2a2682b3057dfea13a828c60b02a102f644eb6d0#egg=web2048
