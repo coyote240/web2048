@@ -1,2 +1,0 @@
-tornado>=4
-honcho>=0.6

@@ -9,5 +9,6 @@ setup(
     license='MIT',
     install_requires=[
         'tornado>=4',
-        'honcho>=0.6'
+        'honcho>=0.6',
+        'motor>=0.6'
     ])
