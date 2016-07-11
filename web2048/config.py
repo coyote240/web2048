@@ -5,3 +5,4 @@ db_name = 'web2048'
 db_path = 'mongodb://localhost:27017'
 cookie_secret = 'foo'
 xsrf_cookies = False
+static_path = './assets'

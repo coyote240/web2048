@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html>
-    <head></head>
-    <body>
-        <section id="">
-            <div class="current">
-                <img src="/image/"/>
-            </div>
-            <div class="next">
-                <img src="/image/1?width=100&height=100"/>
-                <img src="/image/2?width=100&height=100"/>
-                <img src="/image/3?width=100&height=100"/>
-                <img src="/image/4?width=100&height=100"/>
-            </div>
-        </section>
+    <head>
+        <title>WEB2048</title>
+    </head>
+    <body ng-app='web2048'>
+        <game>
+            <turn ng-repeat="state in states" state="state"></turn>
+        </game>
+        <div>
+            <script src="/static/js/angular.min.js"></script>
+            <script src="/static/js/web2048.js"></script>
+        </div>
     </body>
 </html>

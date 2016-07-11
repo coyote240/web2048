@@ -36,13 +36,14 @@ class TurnHandler(tornadobase.handlers.BaseHandler):
         up = board.shift_up()
         down = board.shift_down()
 
-        moves = [board
-                 for board, score in [left, right, up, down]
+        moves = [state
+                 for state, score in [left, right, up, down]
                  if score is not None]
 
-        for board in moves:
-            await self.save_board(board)
+        for state in moves:
+            await self.save_board(state)
 
+        self.set_header('Content-type', 'application/json')
         self.write({
             'boardid': board.id,
             'moves': [board.id for board in moves]
@@ -61,7 +62,7 @@ class TurnHandler(tornadobase.handlers.BaseHandler):
         if existing is None:
             result = await self.collection.insert({
                 'boardid': str(board.id),
-                'state': pickle.dumps(board)})
+                'state': pickle.dumps(board)}, j=True)
             return result
 
         return None
@@ -93,5 +94,7 @@ class ImageHandler(tornadobase.handlers.BaseHandler):
 
     async def get_board(self, boardid):
         board = await self.collection.find_one({'boardid': boardid})
-        state = board.get('state')
-        return pickle.loads(state)
+        if board is not None:
+            state = board.get('state')
+            return pickle.loads(state)
+        return None

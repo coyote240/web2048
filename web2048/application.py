@@ -18,6 +18,7 @@ class Application(tornadobase.application.Application):
     def init_options(self):
         define('db_name', help='Name of database.')
         define('db_path', help='Path to mongodb instance.')
+        define('static_path', help='Path to static web assets.')
 
         super().init_options()
 
@@ -27,7 +28,8 @@ class Application(tornadobase.application.Application):
         db_ref = db_client[options.db_name]
 
         settings.update({
-            'db_ref': db_ref
+            'db_ref': db_ref,
+            'static_path': options.static_path
         })
 
         return settings
