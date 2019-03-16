@@ -4,7 +4,7 @@
         <title>WEB2048</title>
     </head>
     <body ng-app='web2048'>
-        <game>
+        <game start="{{ boardid }}">
             <turn ng-repeat="state in states" state="state"></turn>
         </game>
         <div>

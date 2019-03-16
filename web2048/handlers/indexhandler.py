@@ -1,9 +1,46 @@
 import pickle
+import random
 
-from py2048 import Board
+from py2048 import Board as OldBoard
 from py2048 import Display
 
 import tornadobase.handlers
+
+
+class Board(OldBoard):
+
+    def add_random_cell(self):
+        '''Return a new board with the addition of one random cell.
+        '''
+        board = Board(self)
+        coords = board.get_empty_cells()
+        selected = random.choice(coords)
+        board[selected] = random.randint(1, 2) * 2
+        return board
+
+    def shift_left(self):
+        board, score = super().shift_left()
+        board = board.add_random_cell()
+        board = board.add_random_cell()
+        return board, score
+
+    def shift_right(self):
+        board, score = super().shift_right()
+        board = board.add_random_cell()
+        board = board.add_random_cell()
+        return board, score
+
+    def shift_up(self):
+        board, score = super().shift_up()
+        board = board.add_random_cell()
+        board = board.add_random_cell()
+        return board, score
+
+    def shift_down(self):
+        board, score = super().shift_down()
+        board = board.add_random_cell()
+        board = board.add_random_cell()
+        return board, score
 
 
 class IndexHandler(tornadobase.handlers.BaseHandler):
@@ -11,8 +48,8 @@ class IndexHandler(tornadobase.handlers.BaseHandler):
     def prepare(self):
         self.collection = self.settings['db_ref']['boards']
 
-    def get(self):
-        self.render('index.html')
+    def get(self, boardid=''):
+        self.render('index.html', boardid=boardid)
 
 
 class TurnHandler(tornadobase.handlers.BaseHandler):
@@ -36,17 +73,20 @@ class TurnHandler(tornadobase.handlers.BaseHandler):
         up = board.shift_up()
         down = board.shift_down()
 
-        moves = [state
+        moves = [(state, score)
                  for state, score in [left, right, up, down]
                  if score is not None]
 
-        for state in moves:
+        for state, score in moves:
             await self.save_board(state)
 
         self.set_header('Content-type', 'application/json')
         self.write({
-            'boardid': board.id,
-            'moves': [board.id for board in moves]
+            'boardid': str(board.id),
+            'moves': [{
+                'id': str(board.id),
+                'score': score
+            } for board, score in moves]
         })
 
     async def get_board(self, boardid):
@@ -57,15 +97,10 @@ class TurnHandler(tornadobase.handlers.BaseHandler):
         return None
 
     async def save_board(self, board):
-        existing = await self.get_board(board.id)
-
-        if existing is None:
-            result = await self.collection.insert({
-                'boardid': str(board.id),
-                'state': pickle.dumps(board)}, j=True)
-            return result
-
-        return None
+        result = await self.collection.save({
+            'boardid': str(board.id),
+            'state': pickle.dumps(board)})
+        return result
 
 
 class ImageHandler(tornadobase.handlers.BaseHandler):

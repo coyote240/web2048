@@ -2,13 +2,14 @@ angular.module('web2048', [])
 .directive('game', function () {
     return {
         link: function (scope, element, attrs) {
-            scope.getTurn();
+            var start = attrs.start;
+            scope.getTurn(start);
         },
         controller: ['$scope', 'TurnService', function ($scope, TurnService) {
             $scope.states = [];
 
-            $scope.getTurn = function () {
-                TurnService.getBoard()
+            $scope.getTurn = function (start) {
+                TurnService.getBoard(start)
                     .then(function (response) {
                         $scope.states.push(response.data);
                     });
@@ -31,7 +32,7 @@ angular.module('web2048', [])
         getBoard: function (id) {
             return $http({
                 method: 'GET',
-                url: '/turn/'
+                url: '/turn/' + id
             });
         }
     };

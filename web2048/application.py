@@ -10,9 +10,9 @@ class Application(tornadobase.application.Application):
 
     def init_handlers(self):
         self.handlers = [
-            (r'/', handlers.IndexHandler),
             (r'/image/(.*)', handlers.ImageHandler),
-            (r'/turn/(.*)', handlers.TurnHandler)
+            (r'/turn/(.*)', handlers.TurnHandler),
+            (r'/(.*)?', handlers.IndexHandler)
         ]
 
     def init_options(self):
